@@ -1,0 +1,555 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "E-learning-API",
+        "description": "*   @OA\\Info(\n*   title=\"E-learning-API\",\n*   version=\"1.0.0\"\n*   )",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/v1/categories": {
+            "get": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Get a list of categories",
+                "operationId": "e225c2b7eb5daf7fb16e00f4f07ff030",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Store a new category",
+                "operationId": "dd76b8d73b7ea8b4951f03d7c0904c92",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Technology"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Category created"
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    }
+                }
+            }
+        },
+        "/api/v1/categories/{id}": {
+            "get": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Get category details",
+                "operationId": "9c4934d1b68a6d4440ec72cfc8ae7074",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Category ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Update a category",
+                "operationId": "988e8695bc991d7f8e40131db5ba7a76",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Category ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Science"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Category updated"
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Delete a category",
+                "operationId": "37196d259228d2274dd9dbef8b00e547",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Category ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Category deleted"
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    }
+                }
+            }
+        },
+        "/api/v1/courses": {
+            "get": {
+                "tags": [
+                    "Course"
+                ],
+                "summary": "Get a list of courses",
+                "operationId": "3522f88b734e2061541a8dbd0b6be53c",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Course"
+                ],
+                "summary": "Create a new course",
+                "operationId": "92ce73d19fae55890bc7e00c723b7557",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "description",
+                                    "duration",
+                                    "level",
+                                    "status",
+                                    "category_id"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Introduction to PHP"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Learn the basics of PHP"
+                                    },
+                                    "duration": {
+                                        "type": "integer",
+                                        "example": 120
+                                    },
+                                    "level": {
+                                        "type": "string",
+                                        "example": "Beginner"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "example": "open"
+                                    },
+                                    "category_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "sub_category_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "tags": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            2
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Course created successfully"
+                    },
+                    "400": {
+                        "description": "Invalid input"
+                    }
+                }
+            }
+        },
+        "/api/v1/courses/{id}": {
+            "get": {
+                "tags": [
+                    "Course"
+                ],
+                "summary": "Get a specific course",
+                "operationId": "0cc958d4649cdf4fa331958a855c4be4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the course",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Course found"
+                    },
+                    "404": {
+                        "description": "Course not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Course"
+                ],
+                "summary": "Update an existing course",
+                "operationId": "01b1c78cfc73dd07b3f8db3198cccaf8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the course",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "description",
+                                    "duration",
+                                    "level",
+                                    "status",
+                                    "category_id"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Advanced PHP"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Learn advanced PHP concepts"
+                                    },
+                                    "duration": {
+                                        "type": "integer",
+                                        "example": 180
+                                    },
+                                    "level": {
+                                        "type": "string",
+                                        "example": "Intermediate"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "example": "closed"
+                                    },
+                                    "category_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "sub_category_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "tags": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            2
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Course updated successfully"
+                    },
+                    "400": {
+                        "description": "Invalid input"
+                    },
+                    "404": {
+                        "description": "Course not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Course"
+                ],
+                "summary": "Delete a course",
+                "operationId": "6d62620e5df273a1f962ed6eee294dc1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the course",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Course deleted successfully"
+                    },
+                    "404": {
+                        "description": "Course not found"
+                    }
+                }
+            }
+        },
+        "/api/v1/tags": {
+            "get": {
+                "tags": [
+                    "Tag"
+                ],
+                "summary": "Get a list of tags",
+                "operationId": "e320cb59dba3e323dacbbc502509717c",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Tag"
+                ],
+                "summary": "Store a new tag",
+                "operationId": "d5b48558ae6b21f20e758584734e2cd7",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "php"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "tag created"
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    }
+                }
+            }
+        },
+        "/api/v1/tags/{id}": {
+            "get": {
+                "tags": [
+                    "Tag"
+                ],
+                "summary": "Get tag details",
+                "operationId": "a3d7580f0301bd6fff879d635b82a2fb",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Tag ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Tag"
+                ],
+                "summary": "Update a Tag",
+                "operationId": "ab9fc572397025dcf3a29db57acdebdd",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Tag ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "laravel"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Tag updated"
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Tag"
+                ],
+                "summary": "Delete a Tag",
+                "operationId": "fab7e3dec2348caad78c23998aa54ba3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Tag ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Tag deleted"
+                    },
+                    "404": {
+                        "description": "Tag not found"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Category",
+            "description": "Category"
+        },
+        {
+            "name": "Course",
+            "description": "Course"
+        },
+        {
+            "name": "Tag",
+            "description": "Tag"
+        }
+    ]
+}
