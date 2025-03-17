@@ -1,10 +1,12 @@
 <?php
 namespace App\Http\Controllers\Api\V1;
 
-use App\Services\CategoryService;
+use Exception;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use OpenAPI\Annotations as OS;
+use App\Services\CategoryService;
+use App\Http\Controllers\Controller;
+use Illuminate\Validation\ValidationException;
 
 class CategoryController extends Controller
 {
@@ -25,7 +27,11 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return response()->json($this->categoryService->listCategories());
+        try {
+            return response()->json($this->categoryService->listCategories());
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Une erreur s\'est produite lors de la récupération des catégories.'], 500);
+        }
     }
         /**
      * @OA\Get(
@@ -45,8 +51,18 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        return response()->json($this->categoryService->getCategory($id));
+        try {
+            if (!is_numeric($id)) {
+                return response()->json(['error' => 'L\'ID de la catégorie doit être un nombre.'], 400);
+            }
+
+            return response()->json($this->categoryService->getCategory($id));
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Une erreur s\'est produite lors de la récupération de la catégorie.'], 500);
+        }
     }
+
+
         /**
      * @OA\Post(
      *     path="/api/v1/categories",
@@ -65,12 +81,20 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'parent_id' => 'nullable|exists:categories,id',
-        ]);
-
-        return response()->json($this->categoryService->createCategory($validated), 201);
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255|unique:categories,name',
+                'parent_id' => 'nullable|exists:categories,id',
+            ]);
+    
+            $category = $this->categoryService->createCategory($validated); 
+            return response()->json(['data' => $category], 201);
+            
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 400);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Une erreur s\'est produite lors de la création de la catégorie.'], 500);
+        }
     }
         /**
      * @OA\Put(
@@ -95,15 +119,28 @@ class CategoryController extends Controller
      *     @OA\Response(response=400, description="Invalid request")
      * )
      */
+
     public function update(Request $request, $id)
     {
-        $validated = $request->validate([
-            'name' => 'sometimes|required|string|max:255',
-            'parent_id' => 'nullable|exists:categories,id',
-        ]);
+        try {
+            if (!is_numeric($id)) {
+                return response()->json(['error' => 'L\'ID de la catégorie doit être un nombre.'], 400);
+            }
 
-        return response()->json($this->categoryService->updateCategory($id, $validated));
+            $validated = $request->validate([
+                'name' => 'sometimes|required|string|max:255|unique:categories,name,' . $id,
+                'parent_id' => 'nullable|exists:categories,id',
+            ]);
+
+            return response()->json($this->categoryService->updateCategory($id, $validated));
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 400);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Une erreur s\'est produite lors de la mise à jour de la catégorie.'], 500);
+        }
     }
+
+
         /**
      * @OA\Delete(
      *     path="/api/v1/categories/{id}",
@@ -122,6 +159,15 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        return response()->json($this->categoryService->deleteCategory($id));
+        try {
+            if (!is_numeric($id)) {
+                return response()->json(['error' => 'L\'ID de la catégorie doit être un nombre.'], 400);
+            }
+
+            $this->categoryService->deleteCategory($id);
+            return response()->json(['message' => 'Catégorie supprimée avec succès.'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Une erreur s\'est produite lors de la suppression de la catégorie.'], 500);
+        }
     }
 }

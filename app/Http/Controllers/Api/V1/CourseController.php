@@ -27,9 +27,12 @@ class CourseController extends Controller
      */
     public function index()
     {
-        return response()->json($this->courseService->listCourses());
+        try {
+            return response()->json($this->courseService->listCourses());
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
-
 
     /**
      * @OA\Get(
@@ -49,7 +52,11 @@ class CourseController extends Controller
      */
     public function show($id)
     {
-        return $this->courseService->getCourse($id);
+        try {
+            return response()->json($this->courseService->getCourse($id));
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Une erreur s\'est produite lors de la récupération du cours.'], 500);
+        }
     }
 
 
@@ -78,21 +85,34 @@ class CourseController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'name' => 'required|string',
-            'description' => 'required|string',
-            'duration' => 'required|integer',
-            'level' => 'required|string',
-            'status' => 'required|string',
-            'category_id' => 'required|exists:categories,id',
-            'sub_category_id' => 'nullable|exists:categories,id',
-            'tags' => 'nullable|array',
-            'tags.*' => 'exists:tags,id',
-        ]);
-
-        return $this->courseService->createCourse($data);
+        try {
+            $user = auth()->user();
+    
+            if (!$user) {
+                return response()->json(['error' => 'Utilisateur non authentifié'], 401);
+            }
+    
+            $data = $request->validate([
+                'name' => 'required|string',
+                'description' => 'required|string',
+                'duration' => 'required|integer',
+                'level' => 'required|string',
+                'status' => 'required|string',
+                'category_id' => 'required|exists:categories,id',
+                'sub_category_id' => 'nullable|exists:categories,id',
+                'tags' => 'nullable|array',
+                'tags.*' => 'exists:tags,id',
+            ]);
+    
+            $data['user_id'] = $user->id;
+    
+            return response()->json($this->courseService->createCourse($data), 201);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 400);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Une erreur s\'est produite lors de la création du cours.'], 500);
+        }
     }
-
 
         /**
      * @OA\Put(
@@ -126,22 +146,28 @@ class CourseController extends Controller
      * )
      */
 
-    public function update(Request $request, $id)
-    {
-        $data = $request->validate([
-            'name' => 'required|string',
-            'description' => 'sometimes|string',
-            'duration' => 'required|integer',
-            'level' => 'required|string',
-            'status' => 'sometimes|string',
-            'category_id' => 'required|exists:categories,id',
-            'sub_category_id' => 'nullable|exists:categories,id',
-            'tags' => 'nullable|array',
-            'tags.*' => 'exists:tags,id',
-        ]);
-
-        return $this->courseService->updateCourse($id, $data);
-    }
+     public function update(Request $request, $id)
+     {
+         try {
+             $data = $request->validate([
+                 'name' => 'required|string',
+                 'description' => 'sometimes|string',
+                 'duration' => 'required|integer',
+                 'level' => 'required|string',
+                 'status' => 'sometimes|string',
+                 'category_id' => 'required|exists:categories,id',
+                 'sub_category_id' => 'nullable|exists:categories,id',
+                 'tags' => 'nullable|array',
+                 'tags.*' => 'exists:tags,id',
+             ]);
+ 
+             return response()->json($this->courseService->updateCourse($id, $data));
+         } catch (ValidationException $e) {
+             return response()->json(['error' => $e->errors()], 400);
+         } catch (\Exception $e) {
+             return response()->json(['error' => 'Une erreur s\'est produite lors de la mise à jour du cours.'], 500);
+         }
+     }
 
 
         /**
@@ -161,9 +187,13 @@ class CourseController extends Controller
      * )
      */
     
-    public function destroy($id)
-    {
-        $this->courseService->deleteCourse($id);
-        return response()->json(['message' => 'Course deleted successfully']);
-    }
+     public function destroy($id)
+     {
+         try {
+             $this->courseService->deleteCourse($id);
+             return response()->json(['message' => 'Course deleted successfully']);
+         } catch (\Exception $e) {
+             return response()->json(['error' => 'Une erreur s\'est produite lors de la suppression du cours.'], 500);
+         }
+     }
 }

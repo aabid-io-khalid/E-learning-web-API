@@ -16,8 +16,8 @@ class CourseResource extends JsonResource
             'duration' => $this->duration,
             'level' => $this->level,
             'status' => $this->status,
-            'category' => $this->category->name, 
-            'sub_category' => $this->subCategory->name, 
+            'category_name' => $this->category ? $this->category->name : null,
+            'sub_category_name' => $this->subCategory ? $this->subCategory->name : null,
         ];
     }
 }
