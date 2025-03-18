@@ -12,7 +12,7 @@ class CategorySeeder extends Seeder
     {
         Category::factory(10)->create();
 
-        Category::factory(20)->create([
+        Category::factory(10)->create([
             'parent_id' => Category::inRandomOrder()->first()->id,
         ]);
     }
