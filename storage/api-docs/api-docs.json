@@ -536,6 +536,280 @@
                     }
                 }
             }
+        },
+        "/api/v2/permissions": {
+            "get": {
+                "tags": [
+                    "Permission"
+                ],
+                "summary": "Get a list of permission",
+                "operationId": "e28d2a2fd9cd73a90b676fd52cb2818b",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Permission"
+                ],
+                "summary": "Store a new permission",
+                "operationId": "bfebfe781e5666c39163af591724fb39",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "see-course"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "permission created"
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    }
+                }
+            }
+        },
+        "/api/v2/permissions/{id}": {
+            "get": {
+                "tags": [
+                    "Permission"
+                ],
+                "summary": "Get permission details",
+                "operationId": "308e41fa15f4ccc4391c6d907059666d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Permission ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Permission"
+                ],
+                "summary": "Update a permission",
+                "operationId": "5421effeb328a988a5e436d8212f21e8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "permission ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "update-course"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Permission updated"
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Permission"
+                ],
+                "summary": "Delete a Permission",
+                "operationId": "c0199065220a945987bf4d5bf6c8b48a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Permission ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Permission deleted"
+                    },
+                    "404": {
+                        "description": "Permission not found"
+                    }
+                }
+            }
+        },
+        "/api/v2/roles": {
+            "get": {
+                "tags": [
+                    "Role"
+                ],
+                "summary": "Get a list of roles",
+                "operationId": "4f1943948d14ec54ae1e6812a50e2057",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Role"
+                ],
+                "summary": "Store a new role",
+                "operationId": "76a3ea7bc79a9ae9cb18f4a36909d212",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "see-course"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "role created"
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    }
+                }
+            }
+        },
+        "/api/v2/roles/{id}": {
+            "put": {
+                "tags": [
+                    "Role"
+                ],
+                "summary": "Update a role",
+                "operationId": "a67c3890fa55df0614a4244a891f0958",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "role ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "update-course"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Role updated"
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Role"
+                ],
+                "summary": "Delete a Role",
+                "operationId": "78d1a8536bb981fcc9c3f73420f600e6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Role ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Role deleted"
+                    },
+                    "404": {
+                        "description": "Role not found"
+                    }
+                }
+            }
         }
     },
     "tags": [
@@ -550,6 +824,14 @@
         {
             "name": "Tag",
             "description": "Tag"
+        },
+        {
+            "name": "Permission",
+            "description": "Permission"
+        },
+        {
+            "name": "Role",
+            "description": "Role"
         }
     ]
 }
