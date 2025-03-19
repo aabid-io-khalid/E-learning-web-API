@@ -13,10 +13,6 @@ class MentorController extends Controller
         try {
             $mentor = User::findOrFail($id);
 
-            // if (!$mentor->isMentor()) {
-            //     return response()->json(['error' => 'Cet utilisateur n\'est pas un mentor.'], 403);
-            // }
-
             $courses = $mentor->coursesMentor;
 
             return response()->json([
