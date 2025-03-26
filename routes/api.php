@@ -10,8 +10,7 @@ use App\Http\Controllers\Api\V1\TagController;
 use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\Api\V2\RoleController;
 use App\Http\Controllers\Api\V2\BadgeController;
-use App\Http\Controllers\Api\V1\CourseController as CourseV1Controller;
-use App\Http\Controllers\Api\V3\CourseController as CourseV3Controller;
+use App\Http\Controllers\Api\V1\CourseController;
 use App\Http\Controllers\Api\V3\PaymentController;
 use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V2\Auth\AuthController;
@@ -34,7 +33,7 @@ Route::prefix('v2')->group(function () {
     Route::get('/students/{id}/badges', [BadgeController::class, 'getaUserBadges']);
 
     Route::post('/courses/{id}/videos', [CourseV1Controller::class, 'addVideoToCourse']);
-    Route::get('/courses/{id}/videos', [CourseV1Controller::class, 'listVideosOfCourse']);
+    
     Route::get('/videos/{id}', [CourseV1Controller::class, 'getVideo']);
     Route::put('/videos/{id}', [CourseV1Controller::class, 'updateVideo']);
     Route::delete('/videos/{id}', [CourseV1Controller::class, 'deleteVideo']);
@@ -59,6 +58,7 @@ Route::prefix('v2')->group(function () {
     }); 
 
     Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/courses/{id}/videos', [CourseV1Controller::class, 'listVideosOfCourse']);
         Route::get('/users/{user}', [UserController::class, 'show']);
         Route::put('/users/edit', [UserController::class, 'update']);
         Route::post('/users/{user}', [UserController::class, 'updateUser'])->middleware('role:admin');
@@ -133,5 +133,5 @@ Route::get('/user', function (Request $request) {
 
 
 Route::get('/test', function () {
-    return response()->json(['message' => 'Hello, world!']);
+    return response()->json(['message' => 'You Have Arrived!']);
 });

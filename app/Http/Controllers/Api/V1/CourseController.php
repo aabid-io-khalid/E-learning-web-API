@@ -22,10 +22,83 @@ class CourseController extends Controller
     /**
      * @OA\Get(
      *     path="/api/v1/courses",
-     *     summary="Get a list of courses",
-     *     tags={"Course"},
-     *     @OA\Response(response=200, description="Successful operation"),
-     *     @OA\Response(response=400, description="Invalid request")
+     *     summary="Get a paginated list of courses with optional filtering",
+     *     description="Returns a list of courses that can be filtered by search term, category, or difficulty level",
+     *     tags={"Courses"},
+     *     operationId="getCoursesList",
+     *     @OA\Parameter(
+     *         name="search",
+     *         in="query",
+     *         description="Search term to filter courses by title or description",
+     *         required=false,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="category",
+     *         in="query",
+     *         description="ID of the category to filter courses",
+     *         required=false,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="difficulty",
+     *         in="query",
+     *         description="Difficulty level to filter courses (beginner, intermediate, advanced)",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string",
+     *             enum={"beginner", "intermediate", "advanced"}
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         description="Page number for pagination",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=1)
+     *     ),
+     *     @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         description="Number of items per page",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=15)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                  @OA\Property(property="id", type="integer"),
+     *                  @OA\Property(property="title", type="string")
+     *             ),
+     *             @OA\Property(
+     *                 property="meta",
+     *                 type="object",
+     *                 @OA\Property(property="current_page", type="integer"),
+     *                 @OA\Property(property="total", type="integer"),
+     *                 @OA\Property(property="per_page", type="integer"),
+     *                 @OA\Property(property="last_page", type="integer")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid request parameters",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Invalid category ID")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal server error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Something went wrong")
+     *         )
+     *     )
      * )
      */
     public function index(Request $request)
@@ -36,7 +109,7 @@ class CourseController extends Controller
                 'category_id' => $request->input('category'),
                 'difficulty' => $request->input('difficulty')
             ]);
-    
+
             return response()->json($courses);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);

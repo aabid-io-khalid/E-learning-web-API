@@ -21,7 +21,7 @@ class BadgeController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/v1/badges",
+     *     path="/api/v2/badges",
      *     summary="Obtenir les badges de l'utilisateur",
      *     tags={"Badge"},
      *     security={{"bearerAuth":{}}},
@@ -43,7 +43,7 @@ class BadgeController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/v1/admin/badges",
+     *     path="/api/v2/admin/badges",
      *     summary="Créer un nouveau badge (admin)",
      *     tags={"Badge"},
      *     security={{"bearerAuth":{}}},
@@ -84,7 +84,57 @@ class BadgeController extends Controller
         }
     }
 
-    // modification du badge
+        /**
+     * @OA\Put(
+     *     path="/api/v2/admin/badges/{id}",
+     *     summary="Mettre à jour un badge (Admin seulement)",
+     *     tags={"Badges"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID du badge",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="name", type="string", nullable=true, example="Super Expert"),
+     *             @OA\Property(property="description", type="string", nullable=true, example="A complété 20 cours"),
+     *             @OA\Property(property="image_url", type="string", nullable=true, example="https://example.com/new-badge.png"),
+     *             @OA\Property(property="type", type="string", nullable=true, enum={"student", "mentor"}, example="student"),
+     *             @OA\Property(property="condition_type", type="string", nullable=true, example="courses_completed"),
+     *             @OA\Property(property="condition_value", type="integer", nullable=true, example=20)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Badge mis à jour",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer", example=1),
+     *             @OA\Property(property="name", type="string", example="Super Expert"),
+     *             @OA\Property(property="description", type="string", example="A complété 20 cours"),
+     *             @OA\Property(property="type", type="string", example="student"),
+     *             @OA\Property(property="updated_at", type="string", format="date-time")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Données invalides",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Le type doit être student ou mentor")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Badge non trouvé",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Badge not found")
+     *         )
+     *     )
+     * )
+     */
     public function updateBadge(Request $request, $id)
     {
         try {
@@ -107,7 +157,44 @@ class BadgeController extends Controller
         }
     }
 
-
+        /**
+     * @OA\Get(
+     *     path="/api/v2/badges/user/{id}",
+     *     summary="Obtenir les badges d'un utilisateur spécifique",
+     *     tags={"Badges"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID de l'utilisateur",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Liste des badges de l'utilisateur",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="name", type="string", example="Expert"),
+     *                 @OA\Property(property="description", type="string", example="A complété 10 cours"),
+     *                 @OA\Property(property="image_url", type="string", example="https://example.com/badge.png"),
+     *                 @OA\Property(property="type", type="string", example="student"),
+     *                 @OA\Property(property="created_at", type="string", format="date-time")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Erreur de traitement",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="User not found")
+     *         )
+     *     )
+     * )
+     */
     public function getaUserBadges($id)
     {
         try {
