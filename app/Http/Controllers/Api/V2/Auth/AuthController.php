@@ -7,7 +7,15 @@ use App\Services\AuthService;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use OpenAPI\Annotations as OA;
 
+
+/**
+ * @OA\Tag(
+ *     name="Authentication",
+ *     description="Gestion de l'authentification des utilisateurs"
+ * )
+ */
 class AuthController extends Controller
 {
     protected $authService;
@@ -17,6 +25,41 @@ class AuthController extends Controller
         $this->authService = $authService;
     }
 
+
+    /**
+     * Inscription d'un utilisateur
+     *
+     * @OA\Post(
+     *     path="/api/v2/auth/register",
+     *     summary="Inscription d'un utilisateur",
+     *     tags={"Authentication"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 @OA\Property(property="name", type="string", example="John Doe"),
+     *                 @OA\Property(property="email", type="string", example="john@example.com"),
+     *                 @OA\Property(property="password", type="string", example="password123"),
+     *                 @OA\Property(property="role", type="string", example="student"),
+     *                 @OA\Property(property="profile_image", type="string", format="binary")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Inscription réussie"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Rôle invalide"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Erreur de validation"
+     *     )
+     * )
+     */
     public function register(Request $request)
     {
         try {
@@ -57,6 +100,31 @@ class AuthController extends Controller
         }
     }
 
+
+    /**
+     * Connexion d'un utilisateur
+     *
+     * @OA\Post(
+     *     path="/api/v2/auth/login",
+     *     summary="Connexion d'un utilisateur",
+     *     tags={"Authentication"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="email", type="string", example="john@example.com"),
+     *             @OA\Property(property="password", type="string", example="password123")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Connexion réussie"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Identifiants invalides"
+     *     )
+     * )
+     */
     public function login(Request $request)
     {
         try {
@@ -82,6 +150,25 @@ class AuthController extends Controller
         }
     }
 
+
+     /**
+     * Déconnexion d'un utilisateur
+     *
+     * @OA\Post(
+     *     path="/api/v2/auth/logout",
+     *     summary="Déconnexion d'un utilisateur",
+     *     tags={"Authentication"},
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Déconnexion réussie"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Utilisateur non authentifié"
+     *     )
+     * )
+     */
     public function logout()
     {
         try {

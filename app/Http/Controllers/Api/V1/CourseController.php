@@ -2,20 +2,23 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Controllers\Controller;
+use App\Models\Course;
 use Illuminate\Http\Request;
-use App\Services\CourseService;
+use App\Services\VideoService;
 use OpenAPI\Annotations as OS;
+use App\Services\CourseService;
+use App\Http\Controllers\Controller;
 
 class CourseController extends Controller
 {
     protected $courseService;
+    protected $videoService;
 
-    public function __construct(CourseService $courseService)
+    public function __construct(CourseService $courseService, VideoService $videoService)
     {
         $this->courseService = $courseService;
+        $this->videoService = $videoService;
     }
-
     /**
      * @OA\Get(
      *     path="/api/v1/courses",
@@ -25,10 +28,16 @@ class CourseController extends Controller
      *     @OA\Response(response=400, description="Invalid request")
      * )
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            return response()->json($this->courseService->listCourses());
+            $courses = $this->courseService->listCourses([
+                'search' => $request->input('search'),
+                'category_id' => $request->input('category'),
+                'difficulty' => $request->input('difficulty')
+            ]);
+    
+            return response()->json($courses);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
@@ -98,6 +107,7 @@ class CourseController extends Controller
                 'duration' => 'required|integer',
                 'level' => 'required|string',
                 'status' => 'required|string',
+                'price' => 'required|integer',
                 'category_id' => 'required|exists:categories,id',
                 'sub_category_id' => 'nullable|exists:categories,id',
                 'tags' => 'nullable|array',
@@ -155,6 +165,7 @@ class CourseController extends Controller
                  'duration' => 'required|integer',
                  'level' => 'required|string',
                  'status' => 'sometimes|string',
+                 'price' => 'required|integer',
                  'category_id' => 'required|exists:categories,id',
                  'sub_category_id' => 'nullable|exists:categories,id',
                  'tags' => 'nullable|array',
@@ -196,4 +207,169 @@ class CourseController extends Controller
              return response()->json(['error' => 'Une erreur s\'est produite lors de la suppression du cours.'], 500);
          }
      }
+
+
+         /**
+     * @OA\Post(
+     *     path="/api/v1/courses/{id}/videos",
+     *     summary="Add a video to a course",
+     *     tags={"Course"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the course",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"title", "url"},
+     *             @OA\Property(property="title", type="string", example="Introduction to PHP"),
+     *             @OA\Property(property="url", type="string", example="https://example.com/video.mp4"),
+     *             @OA\Property(property="description", type="string", example="Learn the basics of PHP")
+     *         )
+     *     ),
+     *     @OA\Response(response=201, description="Video added successfully"),
+     *     @OA\Response(response=400, description="Invalid input"),
+     *     @OA\Response(response=404, description="Course not found")
+     * )
+     */
+    public function addVideoToCourse(Request $request, $courseId)
+    {
+        try {
+            $data = $request->validate([
+                'title' => 'required|string',
+                'video_file' => 'required|url', 
+                'description' => 'nullable|string',
+            ]);
+
+            $video = $this->videoService->addVideoToCourse($courseId, $data);
+
+            return response()->json($video, 201);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/api/v1/courses/{id}/videos",
+     *     summary="List videos of a course",
+     *     tags={"Course"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the course",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(response=200, description="Successful operation"),
+     *     @OA\Response(response=404, description="Course not found")
+     * )
+     */
+    public function listVideosOfCourse($courseId)
+    {
+        try {
+            $videos = $this->videoService->getVideosByCourseId($courseId);
+            return response()->json($videos);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/api/v1/videos/{id}",
+     *     summary="Get details of a video",
+     *     tags={"Video"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the video",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(response=200, description="Video found"),
+     *     @OA\Response(response=404, description="Video not found")
+     * )
+     */
+    public function getVideo($videoId)
+    {
+        try {
+            $video = $this->videoService->getVideoById($videoId);
+            return response()->json($video);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * @OA\Put(
+     *     path="/api/v1/videos/{id}",
+     *     summary="Update a video",
+     *     tags={"Video"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the video",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"title", "url"},
+     *             @OA\Property(property="title", type="string", example="Advanced PHP"),
+     *             @OA\Property(property="url", type="string", example="https://example.com/video.mp4"),
+     *             @OA\Property(property="description", type="string", example="Learn advanced PHP concepts")
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Video updated successfully"),
+     *     @OA\Response(response=400, description="Invalid input"),
+     *     @OA\Response(response=404, description="Video not found")
+     * )
+     */
+    public function updateVideo(Request $request, $videoId)
+    {
+        try {
+            $data = $request->validate([
+                'title' => 'required|string',
+                'url' => 'required|string',
+                'description' => 'nullable|string',
+            ]);
+
+            $video = $this->videoService->updateVideo($videoId, $data);
+
+            return response()->json($video);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * @OA\Delete(
+     *     path="/api/v1/videos/{id}",
+     *     summary="Delete a video",
+     *     tags={"Video"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the video",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(response=200, description="Video deleted successfully"),
+     *     @OA\Response(response=404, description="Video not found")
+     * )
+     */
+    public function deleteVideo($videoId)
+    {
+        try {
+            $this->videoService->deleteVideo($videoId);
+            return response()->json(['message' => 'Video deleted successfully']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }

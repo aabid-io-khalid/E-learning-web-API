@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('role_id')->nullable()->constrained('roles')->onUpdate('cascade');
+        Schema::table('courses', function (Blueprint $table) {
+            $table->decimal('price', 8, 2);
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('role_id');
+        Schema::table('courses', function (Blueprint $table) {
+            $table->dropColumn('price');
         });
     }
 };

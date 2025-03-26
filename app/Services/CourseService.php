@@ -14,10 +14,13 @@ class CourseService
         $this->courseRepository = $courseRepository;
     }
 
-    public function listCourses()
+    public function listCourses(array $filters = [])
     {
-        $courses = $this->courseRepository->getAll();
-        return CourseResource::collection($courses);
+        return $this->courseRepository->searchAndFilter(
+            $filters['search'] ?? null,
+            $filters['category_id'] ?? null,
+            $filters['difficulty'] ?? null
+        );
     }
 
     public function getCourse($id)
@@ -42,5 +45,6 @@ class CourseService
     {
         return $this->courseRepository->delete($id);
     }
+
 
 }

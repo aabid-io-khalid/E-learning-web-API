@@ -2,20 +2,42 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\VideoController;
 use App\Http\Controllers\MentorController;
 use App\Http\Controllers\StatesController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\Api\V1\TagController;
 use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\Api\V2\RoleController;
-use App\Http\Controllers\Api\V1\CourseController;
+use App\Http\Controllers\Api\V2\BadgeController;
+use App\Http\Controllers\Api\V1\CourseController as CourseV1Controller;
+use App\Http\Controllers\Api\V3\CourseController as CourseV3Controller;
+use App\Http\Controllers\Api\V3\PaymentController;
 use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V2\Auth\AuthController;
 use App\Http\Controllers\Api\V2\Auth\UserController;
 use App\Http\Controllers\Api\V2\PermissionController;
 
 
+
+Route::prefix('v3')->middleware('auth:sanctum')->group(function () {
+
+    Route::get('/payments/checkout', [PaymentController::class, 'checkout']);
+    Route::get('/payments/status/{id}', [PaymentController::class, 'status']);
+    Route::get('/payments/history', [PaymentController::class, 'history']);
+
+});
+
+
 Route::prefix('v2')->group(function () {
+  
+    Route::get('/students/{id}/badges', [BadgeController::class, 'getaUserBadges']);
+
+    Route::post('/courses/{id}/videos', [CourseV1Controller::class, 'addVideoToCourse']);
+    Route::get('/courses/{id}/videos', [CourseV1Controller::class, 'listVideosOfCourse']);
+    Route::get('/videos/{id}', [CourseV1Controller::class, 'getVideo']);
+    Route::put('/videos/{id}', [CourseV1Controller::class, 'updateVideo']);
+    Route::delete('/videos/{id}', [CourseV1Controller::class, 'deleteVideo']);
 
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login'])->name('login');
@@ -28,7 +50,6 @@ Route::prefix('v2')->group(function () {
         Route::delete('/{id}', [RoleController::class, 'destroy']);
     }); 
 
-    // routes for permissions [Spatie Pack]
     Route::prefix('permissions')->group(function () {
         Route::get('/', [PermissionController::class, 'index']);
         Route::post('/', [PermissionController::class, 'store']); 
@@ -37,13 +58,15 @@ Route::prefix('v2')->group(function () {
         Route::delete('/{id}', [PermissionController::class, 'destroy']);
     }); 
 
-
-    // routes for checking the auth [working with sanctume this time]
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/users/{user}', [UserController::class, 'show']);
         Route::put('/users/edit', [UserController::class, 'update']);
         Route::post('/users/{user}', [UserController::class, 'updateUser'])->middleware('role:admin');
         Route::post('/logout', [AuthController::class, 'logout'])->name("logout");
+
+        Route::post('/badges', [BadgeController::class, 'createBadge']);
+        Route::put('/badges/{id}', [BadgeController::class, 'updateBadge']);
+        Route::delete('/badges/{id}', [BadgeController::class, 'deleteBadge'])->middleware('role:admin');
     });
     
     Route::get('/students/{id}/courses', [StudentController::class, 'enrolledCourses']);
@@ -57,6 +80,13 @@ Route::prefix('v2')->group(function () {
         Route::get('/stats/categories', [StatesController::class, 'categorieStatistics'])->middleware('role:admin');
         Route::get('/stats/tags', [StatesController::class, 'tagStatistics'])->middleware('role:admin');
     
+    });
+
+    Route::delete('/videos/{id}', [VideoController::class, 'deleteVideo']);
+
+    Route::prefix('courses')->group(function () {
+        Route::post('/{id}/videos', [VideoController::class, 'addVideoToCourse']);
+        Route::get('/{id}/videos', [VideoController::class, 'listVideosOfCourse']);
     });
 });
 
@@ -79,16 +109,16 @@ Route::prefix('v1')->group(function () {
     });
 
     Route::prefix('courses')->group(function () {
-        Route::get('/', [CourseController::class, 'index']); 
-        Route::get('/{id}', [CourseController::class, 'show']); 
+        Route::get('/', [CourseV1Controller::class, 'index']); 
+        Route::get('/{id}', [CourseV1Controller::class, 'show']); 
 
         Route::middleware('auth:sanctum')->group(function () 
         {
-            Route::post('/', [CourseController::class, 'store'])->middleware('role:mentor'); 
+            Route::post('/', [CourseV1Controller::class, 'store'])->middleware('role:mentor'); 
         });
 
-        Route::put('/{id}', [CourseController::class, 'update']); 
-        Route::delete('/{id}', [CourseController::class, 'destroy']); 
+        Route::put('/{id}', [CourseV1Controller::class, 'update']); 
+        Route::delete('/{id}', [CourseV1Controller::class, 'destroy']); 
     });
 
 
@@ -103,5 +133,5 @@ Route::get('/user', function (Request $request) {
 
 
 Route::get('/test', function () {
-    return response()->json(['message' => 'Death Can Have Me, When It Earns Me!']);
+    return response()->json(['message' => 'Hello, world!']);
 });
