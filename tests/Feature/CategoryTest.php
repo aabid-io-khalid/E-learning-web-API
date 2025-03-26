@@ -1,6 +1,6 @@
 <?php
 
-test("categorie display",function(){
+test("can list categories",function(){
 
     $response = $this->get("api/v1/categories");
     $response->assertStatus(200);

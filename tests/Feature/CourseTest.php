@@ -1,6 +1,6 @@
 <?php
 
-test("course backTrakcking", function () {
+test("can delete course", function () {
     $course = \App\Models\Course::factory()->create();
     $response = $this->delete("api/v1/courses/{$course->id}");
 
@@ -15,7 +15,7 @@ test("delete returns 404 if course not found", function () {
     $response->assertStatus(404);
 });
 
-test("course backTrakcking", function () {
+test("can create course", function () {
     $category = \App\Models\Category::factory()->create();
     $tags = \App\Models\Tag::factory()->count(2)->create();
 

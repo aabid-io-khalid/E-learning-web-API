@@ -1,6 +1,6 @@
 <?php
 
-test("tags display",function(){
+test("can list tags",function(){
 
     $response = $this->get("api/v1/tags");
     $response->assertStatus(200);
@@ -14,7 +14,7 @@ test("tags display",function(){
 
 });
 
-test("tag adding", function(){
+test("can add tag", function(){
     $tag = [
         "name" => "saly"
     ];
@@ -27,7 +27,7 @@ test("tag adding", function(){
 
 });
 
-test('create a tag and than delete it', function () {
+test('can create a tag and delete it', function () {
     $tag = [
         'name' => 'developement',
     ];
@@ -49,7 +49,7 @@ test('create a tag and than delete it', function () {
     ]);
 });
 
-test('tag update', function () {
+test('can update a tag', function () {
     $tag = [
         'name' => 'evelopement',
     ];
@@ -68,7 +68,7 @@ test('tag update', function () {
 
 });
 
-test('validate tag existence', function () {
+test('cannot update a non-existent tag', function () {
     $update = ['name' => 'newTagName'];
 
     $res = $this->put('/api/v1/tags/9999', $update);

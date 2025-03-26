@@ -387,6 +387,202 @@
                 }
             }
         },
+        "/api/v1/courses/{id}/videos": {
+            "get": {
+                "tags": [
+                    "Course"
+                ],
+                "summary": "List videos of a course",
+                "operationId": "f685f47834004bb2f2c23c4e02c1d4e4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the course",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Course not found"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Course"
+                ],
+                "summary": "Add a video to a course",
+                "operationId": "351215a29b624480291d20bed1adf70f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the course",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "url"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Introduction to PHP"
+                                    },
+                                    "url": {
+                                        "type": "string",
+                                        "example": "https://example.com/video.mp4"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Learn the basics of PHP"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Video added successfully"
+                    },
+                    "400": {
+                        "description": "Invalid input"
+                    },
+                    "404": {
+                        "description": "Course not found"
+                    }
+                }
+            }
+        },
+        "/api/v1/videos/{id}": {
+            "get": {
+                "tags": [
+                    "Video"
+                ],
+                "summary": "Get details of a video",
+                "operationId": "901d41fdab5cc7f1f3b93f7bdf87bc3e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the video",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Video found"
+                    },
+                    "404": {
+                        "description": "Video not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Video"
+                ],
+                "summary": "Update a video",
+                "operationId": "97ebea3ba7bfc4c43f57d5e5bbcde4fa",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the video",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "url"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Advanced PHP"
+                                    },
+                                    "url": {
+                                        "type": "string",
+                                        "example": "https://example.com/video.mp4"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Learn advanced PHP concepts"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Video updated successfully"
+                    },
+                    "400": {
+                        "description": "Invalid input"
+                    },
+                    "404": {
+                        "description": "Video not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Video"
+                ],
+                "summary": "Delete a video",
+                "operationId": "86a75ed2268a0811293bb3d113d564dc",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the video",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Video deleted successfully"
+                    },
+                    "404": {
+                        "description": "Video not found"
+                    }
+                }
+            }
+        },
         "/api/v1/tags": {
             "get": {
                 "tags": [
@@ -535,6 +731,120 @@
                         "description": "Tag not found"
                     }
                 }
+            }
+        },
+        "/api/v2/auth/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Inscription d'un utilisateur",
+                "description": "Inscription d'un utilisateur",
+                "operationId": "d64a7ef2424582b371e3865cf3153203",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "john@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    },
+                                    "role": {
+                                        "type": "string",
+                                        "example": "student"
+                                    },
+                                    "profile_image": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Inscription réussie"
+                    },
+                    "400": {
+                        "description": "Rôle invalide"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    }
+                }
+            }
+        },
+        "/api/v2/auth/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Connexion d'un utilisateur",
+                "description": "Connexion d'un utilisateur",
+                "operationId": "2210c5f09d96c3aec187226dda8e2c54",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "john@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Connexion réussie"
+                    },
+                    "401": {
+                        "description": "Identifiants invalides"
+                    }
+                }
+            }
+        },
+        "/api/v2/auth/logout": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Déconnexion d'un utilisateur",
+                "description": "Déconnexion d'un utilisateur",
+                "operationId": "304eb734f9991d3d568677334fe322f7",
+                "responses": {
+                    "200": {
+                        "description": "Déconnexion réussie"
+                    },
+                    "401": {
+                        "description": "Utilisateur non authentifié"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/v2/permissions": {
@@ -810,9 +1120,375 @@
                     }
                 }
             }
+        },
+        "/api/v2/courses/{course}/enroll": {
+            "post": {
+                "tags": [
+                    "Enrollments"
+                ],
+                "summary": "Inscrire un utilisateur à un cours",
+                "description": "Inscrire un utilisateur à un cours",
+                "operationId": "8b196303afe7eca0ac9be7303e652df7",
+                "parameters": [
+                    {
+                        "name": "course",
+                        "in": "path",
+                        "description": "ID du cours",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Inscription réussie",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Inscription réussie."
+                                        },
+                                        "enrollment": {
+                                            "$ref": "#/components/schemas/Enrollment"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Déjà inscrit",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Vous êtes déjà inscrit à ce cours."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non authentifié"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v2/courses/{course}/enrollments": {
+            "get": {
+                "tags": [
+                    "Enrollments"
+                ],
+                "summary": "Lister les inscriptions d'un cours",
+                "description": "Lister les inscriptions d'un cours",
+                "operationId": "8b531dfda678327f392e036cbcdaf022",
+                "parameters": [
+                    {
+                        "name": "course",
+                        "in": "path",
+                        "description": "ID du cours",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste des inscriptions",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "enrollments": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Enrollment"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non authentifié"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v2/enrollments/{enrollment}": {
+            "put": {
+                "tags": [
+                    "Enrollments"
+                ],
+                "summary": "Mettre à jour le statut d'une inscription",
+                "description": "Mettre à jour le statut d'une inscription",
+                "operationId": "f89806ad11293e489d01b733f54709bf",
+                "parameters": [
+                    {
+                        "name": "enrollment",
+                        "in": "path",
+                        "description": "ID de l'inscription",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "pending",
+                                            "accepted",
+                                            "rejected"
+                                        ],
+                                        "example": "accepted"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Statut mis à jour",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Statut mis à jour."
+                                        },
+                                        "enrollment": {
+                                            "$ref": "#/components/schemas/Enrollment"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Action non autorisée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Action non autorisée."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non authentifié"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/statistics/courses": {
+            "get": {
+                "tags": [
+                    "Statistics"
+                ],
+                "summary": "Statistiques des cours",
+                "description": "Obtenir les statistiques des cours",
+                "operationId": "67689218de498fb342053f08210ef895",
+                "responses": {
+                    "200": {
+                        "description": "Statistiques des cours",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "total_courses": {
+                                            "type": "integer",
+                                            "example": 100
+                                        },
+                                        "Beginner_courses": {
+                                            "type": "integer",
+                                            "example": 30
+                                        },
+                                        "Advanced_courses": {
+                                            "type": "integer",
+                                            "example": 40
+                                        },
+                                        "Intermediate_courses": {
+                                            "type": "integer",
+                                            "example": 30
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/statistics/categories": {
+            "get": {
+                "tags": [
+                    "Statistics"
+                ],
+                "summary": "Statistiques des catégories",
+                "description": "Obtenir les statistiques des catégories",
+                "operationId": "1f6b283efa074d8804e3a4d7c4cf468a",
+                "responses": {
+                    "200": {
+                        "description": "Statistiques des catégories",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "total_categories": {
+                                            "type": "integer",
+                                            "example": 10
+                                        },
+                                        "categories_with_courses": {
+                                            "type": "integer",
+                                            "example": 8
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/statistics/tags": {
+            "get": {
+                "tags": [
+                    "Statistics"
+                ],
+                "summary": "Statistiques des tags",
+                "description": "Obtenir les statistiques des tags",
+                "operationId": "8bf5185ebd04dedd116dc7e0c708f9cb",
+                "responses": {
+                    "200": {
+                        "description": "Statistiques des tags",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "total_tags": {
+                                            "type": "integer",
+                                            "example": 50
+                                        },
+                                        "tags_with_courses": {
+                                            "type": "integer",
+                                            "example": 40
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Enrollment": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "course_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "user_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "pending"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-10-01T12:00:00.000000Z"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-10-01T12:00:00.000000Z"
+                    },
+                    "user": {
+                        "properties": {
+                            "id": {
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "name": {
+                                "type": "string",
+                                "example": "John Doe"
+                            },
+                            "email": {
+                                "type": "string",
+                                "example": "john@example.com"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            }
         }
     },
     "tags": [
+        {
+            "name": "Authentication",
+            "description": "Gestion de l'authentification des utilisateurs"
+        },
+        {
+            "name": "Statistics",
+            "description": "Statistiques sur les cours, catégories et tags"
+        },
         {
             "name": "Category",
             "description": "Category"
@@ -820,6 +1496,10 @@
         {
             "name": "Course",
             "description": "Course"
+        },
+        {
+            "name": "Video",
+            "description": "Video"
         },
         {
             "name": "Tag",
@@ -832,6 +1512,10 @@
         {
             "name": "Role",
             "description": "Role"
+        },
+        {
+            "name": "Enrollments",
+            "description": "Enrollments"
         }
     ]
 }
